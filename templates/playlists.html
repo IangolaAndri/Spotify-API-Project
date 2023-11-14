@@ -1,0 +1,27 @@
+<!-- templates/index_playlists.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Featured Playlists from Spotify</title>
+</head>
+<body>
+    <h1>Playlists from Spotify</h1>
+    <ul>
+        {% for playlist in playlists %}
+            <li>
+                <strong>{{ playlist.name }}</strong> - {{ playlist.owner.display_name }}
+                <br/>
+                {% if playlist.external_urls and playlist.external_urls.spotify %}
+                        <a href="{{ playlist.external_urls.spotify }}" target="_blank">
+                            <img src="{{ playlist.images[0].url }}" alt="{{ playlist.name }} image" width="100" height="100">
+                        </a>
+                    {% else %}
+                        <img src="{{ playlist.images[0].url }}" alt="{{ playlist.name }} image" width="100" height="100">
+                    {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
