@@ -1,16 +1,18 @@
+{% include 'navbar.html' %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to my Spotify App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 </head>
 <body>
-    <h1>Welcome to my Spotify App</h1>
+    <h1>Statsify</h1>
+    <h2>Get your Spotify stats</h2>
     <p>
-        {% for link in links %}
-            <a href="{{ link.url }}">{{ link.text }}</a><br>
-        {% endfor %}
+        Login with your Spotify account here
+            <a href="{{ url_for('login') }}">Go to Spotify</a><br>
     </p>
 </body>
 </html>
