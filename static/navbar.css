@@ -1,0 +1,28 @@
+/* static/navbar.css */
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+nav {
+    background-color: #003366;
+    padding: 10px;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+li {
+    margin-right: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+}

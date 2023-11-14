@@ -1,18 +1,16 @@
 <!-- templates/topTracks.html -->
+{% include 'navbar.html' %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Tracks from Spotify</title>
-    <style>
-        .time-frame {
-            display: "short_term";
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='topTracks.css') }}">
 </head>
 <body>
 
+    <header>
     <h1>Top Tracks from Spotify</h1>
 
     <div id="timeFrameSelector">
@@ -26,9 +24,10 @@
             <input type="radio" name="timeFrame" value="long_term"> Long Term (All time)
         </label>
     </div>
+    </header>
 
     <div class="time-frame" id="short_term">
-    <h2>Short Term</h2>
+    <h2>Short Term (4 weeks)</h2>
     <ul>
         {% for track in top_tracks.short_term %}
             <li>
@@ -37,7 +36,11 @@
                     {{ artist.name }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
                 <br/>
-                {% if track.album.images %}
+                {% if track.external_urls and track.external_urls.spotify %}
+                    <a href="{{ track.external_urls.spotify }}" target="_blank">
+                        <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
+                    </a>
+                {% else %}
                     <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
                 {% endif %}
             </li>
@@ -46,7 +49,7 @@
     </div>
 
     <div class="time-frame" id="medium_term">
-    <h2>Medium Term</h2>
+    <h2>Medium Term (6 months)</h2>
     <ul>
         {% for track in top_tracks.medium_term %}
             <li>
@@ -55,7 +58,11 @@
                     {{ artist.name }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
                 <br/>
-                {% if track.album.images %}
+                {% if track.external_urls and track.external_urls.spotify %}
+                    <a href="{{ track.external_urls.spotify }}" target="_blank">
+                        <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
+                    </a>
+                {% else %}
                     <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
                 {% endif %}
             </li>
@@ -64,7 +71,7 @@
     </div>
 
     <div class="time-frame" id="long_term">
-    <h2>Long Term</h2>
+    <h2>Long Term (All time)</h2>
     <ul>
         {% for track in top_tracks.long_term %}
             <li>
@@ -73,7 +80,11 @@
                     {{ artist.name }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
                 <br/>
-                {% if track.album.images %}
+                {% if track.external_urls and track.external_urls.spotify %}
+                    <a href="{{ track.external_urls.spotify }}" target="_blank">
+                        <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
+                    </a>
+                {% else %}
                     <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
                 {% endif %}
             </li>

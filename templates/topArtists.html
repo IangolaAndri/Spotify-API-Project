@@ -1,18 +1,16 @@
 <!-- templates/topArtists.html -->
+{% include 'navbar.html' %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Artists from Spotify</title>
-    <style>
-        .time-frame {
-            display: "short_term";
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='topTracks.css') }}">
 </head>
 <body>
 
+    <header>
     <h1>Top Artists from Spotify</h1>
 
     <div id="timeFrameSelector">
@@ -26,6 +24,7 @@
             <input type="radio" name="timeFrame" value="long_term"> Long Term (All time)
         </label>
     </div>
+</header>
 
     <div class="time-frame" id="short_term">
         <h2>Short Term (4 weeks)</h2>

@@ -19,14 +19,7 @@ API_BASE_URL = 'https://api.spotify.com/v1/'
 
 @app.route('/')
 def index():
-    links = [
-        {'url': '/login', 'text': 'Login with Spotify'},
-        {'url': '/topTracks', 'text': 'my top tracks'},
-        {'url': '/topArtists', 'text': 'my top artists'},
-        {'url': '/playlists', 'text': 'my playlists'},
-    ]
-
-    return render_template('index.html', links=links)
+    return render_template('index.html')
 
 @app.route('/login')
 def login():
@@ -91,7 +84,7 @@ def get_session_data():
 @app.route('/playlists')
 def get_playlists():
     if 'access_token' not in session:
-        redirect('/login')
+        return redirect(url_for('login'))
     
     if datetime.now().timestamp() > session['expires_at']:
         redirect('/refresh-token')
@@ -113,14 +106,14 @@ def get_top_tracks(time_range):
         'Authorization': f"Bearer {session['access_token']}"
     }
 
-    response = requests.get(API_BASE_URL + f'me/top/tracks?time_range={time_range}', headers=headers)
+    response = requests.get(API_BASE_URL + f'me/top/tracks?time_range={time_range}&limit=50&offset=0', headers=headers)
     top_tracks = response.json()
     return top_tracks['items']
 
 @app.route('/topTracks')
 def get_topTracks():
     if 'access_token' not in session:
-        return redirect('/login')
+       return redirect(url_for('login'))
     if datetime.now().timestamp() > session['expires_at']:
         return redirect('/refresh-token')
 
@@ -139,7 +132,7 @@ def get_top_artists(time_range):
         'Authorization': f"Bearer {session['access_token']}"
     }
 
-    response = requests.get(API_BASE_URL + f'me/top/artists?time_range={time_range}', headers=headers)
+    response = requests.get(API_BASE_URL + f'me/top/artists?time_range={time_range}&limit=50&offset=0', headers=headers)
     top_artists = response.json()
     return top_artists['items']
 
@@ -150,7 +143,7 @@ def save_to_json(data, filename):
 @app.route('/topArtists')
 def get_topArtists():
     if 'access_token' not in session:
-        redirect('/login')
+        return redirect(url_for('login'))
     
     if datetime.now().timestamp() > session['expires_at']:
         redirect('/refresh-token')
@@ -168,7 +161,7 @@ def get_topArtists():
 @app.route('/refresh-token', methods=['POST'])
 def refresh_token():
     if 'refresh_token' not in session:
-        return redirect('/login')
+        return redirect(url_for('login'))
     
     # Requesting new access token if expiered 
     if datetime.now().timestamp() > session['expires_at']:
@@ -185,7 +178,7 @@ def refresh_token():
         session['access_token'] = new_token_info['access_token']
         session['expires_at'] = datetime.now().timestamp() + new_token_info['expires_in']
 
-        return redirect('/')
+        return redirect(url_for('/'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
