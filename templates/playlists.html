@@ -12,6 +12,14 @@
         {% for playlist in playlists %}
             <li>
                 <strong>{{ playlist.name }}</strong> - {{ playlist.owner.display_name }}
+                <br/>
+                {% if playlist.external_urls and playlist.external_urls.spotify %}
+                        <a href="{{ playlist.external_urls.spotify }}" target="_blank">
+                            <img src="{{ playlist.images[0].url }}" alt="{{ playlist.name }} image" width="100" height="100">
+                        </a>
+                    {% else %}
+                        <img src="{{ playlist.images[0].url }}" alt="{{ playlist.name }} image" width="100" height="100">
+                    {% endif %}
             </li>
         {% endfor %}
     </ul>

@@ -1,19 +1,108 @@
-<!-- templates/index.html -->
+<!-- templates/topTracks.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Tracks from Spotify</title>
+    <style>
+        .time-frame {
+            display: "short_term";
+        }
+    </style>
 </head>
 <body>
+
     <h1>Top Tracks from Spotify</h1>
+
+    <div id="timeFrameSelector">
+        <label>
+            <input type="radio" name="timeFrame" value="short_term" checked> Short Term (4 weeks)
+        </label>
+        <label>
+            <input type="radio" name="timeFrame" value="medium_term"> Medium Term (6 months)
+        </label>
+        <label>
+            <input type="radio" name="timeFrame" value="long_term"> Long Term (All time)
+        </label>
+    </div>
+
+    <div class="time-frame" id="short_term">
+    <h2>Short Term</h2>
     <ul>
-        {% for track in top_tracks %}
+        {% for track in top_tracks.short_term %}
             <li>
-                <strong>{{ track.name }}</strong> by {{ track.artists[0].name }}
+                <strong>{{ track.name }}</strong> by 
+                {% for artist in track.artists %}
+                    {{ artist.name }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+                <br/>
+                {% if track.album.images %}
+                    <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
+    </div>
+
+    <div class="time-frame" id="medium_term">
+    <h2>Medium Term</h2>
+    <ul>
+        {% for track in top_tracks.medium_term %}
+            <li>
+                <strong>{{ track.name }}</strong> by 
+                {% for artist in track.artists %}
+                    {{ artist.name }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+                <br/>
+                {% if track.album.images %}
+                    <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    </div>
+
+    <div class="time-frame" id="long_term">
+    <h2>Long Term</h2>
+    <ul>
+        {% for track in top_tracks.long_term %}
+            <li>
+                <strong>{{ track.name }}</strong> by 
+                {% for artist in track.artists %}
+                    {{ artist.name }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+                <br/>
+                {% if track.album.images %}
+                    <img src="{{ track.album.images[0].url }}" alt="{{ track.name }} image" width="100" height="100">
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var radioButtons = document.querySelectorAll('input[name="timeFrame"]');
+            
+            radioButtons.forEach(function (radioButton) {
+                radioButton.addEventListener('change', function () {
+                    var selectedTimeFrame = document.querySelector('input[name="timeFrame"]:checked').value;
+
+                    // Hide all time frames
+                    document.querySelectorAll('.time-frame').forEach(function (frame) {
+                        frame.style.display = 'none';
+                    });
+
+                    // Show the selected time frame
+                    document.getElementById(selectedTimeFrame).style.display = 'block';
+                });
+            });
+
+            // Trigger the change event for "Short Term" by default
+            document.querySelector('input[value="short_term"]').click();
+        });
+    </script>
+
 </body>
 </html>

@@ -1,3 +1,4 @@
+import json
 import requests
 from flask import Flask, redirect, render_template, request, jsonify, session, url_for
 import urllib.parse
@@ -5,9 +6,6 @@ from datetime import datetime, timedelta
 from flask_cors import CORS 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-
-
 
 app.secret_key ='12435323466_Sdgfsf@5_'
 
@@ -30,7 +28,6 @@ def index():
 
     return render_template('index.html', links=links)
 
-
 @app.route('/login')
 def login():
     scope = 'user-read-private user-read-email user-top-read'
@@ -47,7 +44,6 @@ def login():
     auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
 
     return redirect(auth_url)
-    #return jsonify(url=auth_url)
 
 @app.route('/logout')
 def logout():
@@ -80,8 +76,6 @@ def callback():
         session['refresh_token'] = token_info['refresh_token']
         session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
 
-        #return jsonify(session)
-        #return redirect("http://localhost:3000")
         return redirect("/")
 
 @app.route('/get-session-data')
@@ -94,7 +88,6 @@ def get_session_data():
     
     return jsonify(session)
 
-    
 @app.route('/playlists')
 def get_playlists():
     if 'access_token' not in session:
@@ -109,9 +102,20 @@ def get_playlists():
 
     response = requests.get(API_BASE_URL + 'me/playlists', headers=headers)
     playlists = response.json()
+    playlists_data = {}
+    save_to_json(playlists['items'], 'playlists_data.json')
 
-    # return jsonify(playlists)
+
     return render_template('playlists.html', playlists=playlists['items'])
+
+def get_top_tracks(time_range):
+    headers = {
+        'Authorization': f"Bearer {session['access_token']}"
+    }
+
+    response = requests.get(API_BASE_URL + f'me/top/tracks?time_range={time_range}', headers=headers)
+    top_tracks = response.json()
+    return top_tracks['items']
 
 @app.route('/topTracks')
 def get_topTracks():
@@ -120,16 +124,28 @@ def get_topTracks():
     if datetime.now().timestamp() > session['expires_at']:
         return redirect('/refresh-token')
 
+    top_tracks_data = {}
+
+    time_ranges = ['short_term', 'medium_term', 'long_term']
+
+    for time_range in time_ranges:
+        top_tracks_data[time_range] = get_top_tracks(time_range)
+        save_to_json(top_tracks_data, 'top_tracks_data.json')
+
+    return render_template('topTracks.html', top_tracks=top_tracks_data)
+
+def get_top_artists(time_range):
     headers = {
         'Authorization': f"Bearer {session['access_token']}"
     }
 
-    response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers)
-    topTracks = response.json()
+    response = requests.get(API_BASE_URL + f'me/top/artists?time_range={time_range}', headers=headers)
+    top_artists = response.json()
+    return top_artists['items']
 
-    # return jsonify(topTracks)
-    return render_template('topTracks.html', top_tracks=topTracks['items'])
-
+def save_to_json(data, filename):
+    with open(filename, 'w') as json_file:
+        json.dump(data, json_file, indent=2)
 
 @app.route('/topArtists')
 def get_topArtists():
@@ -138,16 +154,16 @@ def get_topArtists():
     
     if datetime.now().timestamp() > session['expires_at']:
         redirect('/refresh-token')
+    
+    top_artists_data = {}
 
-    headers = {
-        'Authorization': f"Bearer {session['access_token']}"
-    }
+    time_ranges = ['short_term', 'medium_term', 'long_term']
 
-    response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers)
-    topArtists = response.json()
+    for time_range in time_ranges:
+        top_artists_data[time_range] = get_top_artists(time_range)
+        save_to_json(top_artists_data, 'top_artists_data.json')
 
-    #return jsonify(topArtists)
-    return render_template('topArtists.html', top_artists=topArtists['items'])
+    return render_template('topArtists.html', top_artists=top_artists_data)
 
 @app.route('/refresh-token', methods=['POST'])
 def refresh_token():
