@@ -69,7 +69,7 @@ def callback():
         session['refresh_token'] = token_info['refresh_token']
         session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
 
-        return redirect("/")
+        return redirect("/topTracks")
 
 @app.route('/get-session-data')
 def get_session_data():
