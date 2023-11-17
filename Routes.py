@@ -87,7 +87,7 @@ def get_playlists():
         return redirect(url_for('login'))
     
     if datetime.now().timestamp() > session['expires_at']:
-        redirect('/refresh-token')
+       return redirect(url_for('refresh_token'))
 
     headers = {
         'Authorization': f"Bearer {session['access_token']}"
@@ -115,7 +115,7 @@ def get_topTracks():
     if 'access_token' not in session:
        return redirect(url_for('login'))
     if datetime.now().timestamp() > session['expires_at']:
-        return redirect('/refresh-token')
+        return redirect(url_for('refresh_token'))
 
     top_tracks_data = {}
 
@@ -146,7 +146,7 @@ def get_topArtists():
         return redirect(url_for('login'))
     
     if datetime.now().timestamp() > session['expires_at']:
-        redirect('/refresh-token')
+        return redirect(url_for('refresh_token'))
     
     top_artists_data = {}
 
@@ -158,7 +158,7 @@ def get_topArtists():
 
     return render_template('topArtists.html', top_artists=top_artists_data)
 
-@app.route('/refresh-token', methods=['POST'])
+@app.route('/refresh_token')
 def refresh_token():
     if 'refresh_token' not in session:
         return redirect(url_for('login'))
@@ -172,13 +172,13 @@ def refresh_token():
             'client_secret': CLIENT_SECRET
         }
 
-        response = request.post(TOKEN_URL, data=req_body)
+        response = requests.post(TOKEN_URL, data=req_body)
         new_token_info = response.json()
 
         session['access_token'] = new_token_info['access_token']
         session['expires_at'] = datetime.now().timestamp() + new_token_info['expires_in']
 
-        return redirect(url_for('/'))
+        return redirect(url_for('get_topTracks'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
