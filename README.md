@@ -3,9 +3,8 @@ Python project using Spotify API OAuth authentification to retrieve an user's Sp
 * Top artists from last 4 months/6monts/all time
 * Top tracks from last 4 months/6monts/all time
 * Public playlists
-
-## How to run 
-% Python3 Routes.py
+ 
+(https://spotify-api-project-3.onrender.com/)
 
 ## Credits 
 [Tutorial followed for Spotify API OAuth](https://www.youtube.com/watch?v=olY_2MW4Eik&ab_channel=ImdadCodes) 
