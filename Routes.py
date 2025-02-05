@@ -11,7 +11,7 @@ app.secret_key ='12435323466_Sdgfsf@5_'
 
 CLIENT_ID = '1ddccac063164e1e9d28144abfc6a79f'
 CLIENT_SECRET = '895d1a98344d4999ad4d59e76d804520'
-REDIRECT_URI = 'http://localhost:8080/callback'
+REDIRECT_URI = 'https://spotify-api-project-3.onrender.com/callback'
 
 AUTH_URL = 'https://accounts.spotify.com/authorize'
 TOKEN_URL = 'https://accounts.spotify.com/api/token'
